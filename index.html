@@ -15,7 +15,7 @@
         /* Body styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
         }
@@ -39,45 +39,124 @@
             padding: 20px;
             background-color: #fff;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
         }
 
         /* User Information table styles */
-        table {
+        table.user-info {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
 
-        th, td {
+        table.user-info th, table.user-info td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
-        th {
+        table.user-info th {
             background-color: #333;
             color: #fff;
         }
 
-        /* Transaction History table styles */
-        .transaction-history-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Product List styles */
+        h2.product-list-title {
             margin-top: 20px;
         }
 
-        .transaction-history-table th, .transaction-history-table td {
+        table.product-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.product-list th, table.product-list td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .transaction-history-table th {
+        table.product-list th {
             background-color: #333;
             color: #fff;
         }
 
-        /* Add more styles as needed */
+        table.product-list td:hover {
+            background-color: #f2f2f2;
+        }
+
+        /* Loading spinner styles */
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 10px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success message styles */
+        .success-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Button styles */
+        .execute-button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 4px;
+        }
+
+        .execute-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Center-align the link and add design */
+        .etherscan-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .etherscan-link a {
+            color: #007BFF;
+            text-decoration: underline;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .etherscan-link a:hover {
+            background-color: #eee;
+        }
     </style>
 </head>
 <body>
@@ -87,7 +166,7 @@
     <div class="container">
         <h2>User Information</h2>
         <div class="user-info">
-            <table>
+            <table class="user-info">
                 <thead>
                     <tr>
                         <th>Username</th>
@@ -97,80 +176,104 @@
                     </tr>
                 </thead>
                 <tbody id="user-data">
-                    <!-- User data will be populated here dynamically -->
+                    <tr>
+                        <td>John Doe</td>
+                        <td>123456789</td>
+                        <td>Alice Doe, Bob Doe</td>
+                        <td>500</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="product-list-title">Product List</h2>
+        <div class="product-list">
+            <table class="product-list">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="product-data">
+                    <tr>
+                        <td>Product 1</td>
+                        <td>
+                            <button class="execute-button" data-product="Product 1" data-amount="100">Execute Transaction</button>
+                            <div class="success-message" id="successMessage1"></div>
+                            <div class="loading-spinner" id="loadingSpinner1"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Product 2</td>
+                        <td>
+                            <button class="execute-button" data-product="Product 2" data-amount="100">Execute Transaction</button>
+                            <div class="success-message" id="successMessage2"></div>
+                            <div class="loading-spinner" id="loadingSpinner2"></div>
+                        </td>
+                    </tr>
+                    <!-- Add more products with Execute Transaction buttons -->
                 </tbody>
             </table>
         </div>
         
-        <h2>Transaction History</h2>
-        <div class="transaction-history">
-            <table class="transaction-history-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Quantity</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="transaction-data">
-                    <!-- Transaction history data will be populated here dynamically -->
-                </tbody>
-            </table>
+        <div class="etherscan-link">
+            <a href="https://goerli.etherscan.io/token/0xa867f0132755613fe3245bfe52d73c16b4f09953" target="_blank" rel="noopener noreferrer">Check transactions on Etherscan</a>
         </div>
     </div>
 
     <script>
-        // Simulated user data (replace with actual data retrieval)
-        const userData = [
-            { username: 'John Doe', rationNumber: '123456789', nominees: ['Alice Doe', 'Bob Doe'], inventory: 500 },
-            // Add more user data entries as needed
-        ];
+        // Initialize inventory
+        let inventory = 500; // You can set the initial inventory value here.
 
-        // Simulated transaction history data (replace with actual data retrieval)
-        const transactionData = [
-            { date: '2023-09-01', description: 'Received tokens', quantity: 500, status: 'Success' },
-            { date: '2023-09-10', description: 'Used tokens', quantity: 200, status: 'Success' },
-            // Add more transaction history entries as needed
-        ];
+        // Function to update inventory and display success or error message
+        function updateInventory(productName, amount, successMessageId, loadingSpinnerId) {
+            // Show the loading spinner
+            const loadingSpinner = document.getElementById(loadingSpinnerId);
+            loadingSpinner.style.display = 'block';
 
-        // Function to populate user data in the table
-        function populateUserData() {
-            const userDataContainer = document.getElementById('user-data');
-            userDataContainer.innerHTML = '';
+            // Simulate a delay
+            setTimeout(() => {
+                // Hide the loading spinner
+                loadingSpinner.style.display = 'none';
 
-            userData.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${user.username}</td>
-                    <td>${user.rationNumber}</td>
-                    <td>${user.nominees.join(', ')}</td>
-                    <td>${user.inventory}</td>
-                `;
-                userDataContainer.appendChild(row);
-            });
+                // Check if there are enough tokens in the inventory
+                if (inventory >= amount) {
+                    // Update the inventory
+                    inventory -= amount;
+
+                    // Display the success message
+                    const successMessage = document.getElementById(successMessageId);
+                    successMessage.style.display = 'block';
+
+                    // Show a popup message for success
+                    alert(`Transaction for ${productName} was successful!`);
+
+                    // Update the displayed inventory value
+                    document.querySelector('#user-data > tr > td:last-child').textContent = inventory;
+
+                    // Hide the success message after a few seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                } else {
+                    // Display a popup message for insufficient tokens
+                    alert('Insufficient Tokens');
+                }
+            }, 10000); // 10-second delay
         }
 
-        // Function to populate transaction history data in the table
-        function populateTransactionData() {
-            const transactionDataContainer = document.getElementById('transaction-data');
-            transactionDataContainer.innerHTML = '';
-
-            transactionData.forEach(transaction => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${transaction.date}</td>
-                    <td>${transaction.description}</td>
-                    <td>${transaction.quantity}</td>
-                    <td>${transaction.status}</td>
-                `;
-                transactionDataContainer.appendChild(row);
+        // Add click event listeners to Execute Transaction buttons
+        const executeButtons = document.querySelectorAll('.execute-button');
+        executeButtons.forEach((button, index) => {
+            const productName = button.getAttribute('data-product');
+            const amount = button.getAttribute('data-amount');
+            const successMessageId = `successMessage${index + 1}`;
+            const loadingSpinnerId = `loadingSpinner${index + 1}`;
+            button.addEventListener('click', () => {
+                updateInventory(productName, amount, successMessageId, loadingSpinnerId);
             });
-        }
-
-        // Initial population of user data and transaction history data
-        populateUserData();
-        populateTransactionData();
+        });
     </script>
 </body>
 </html>
